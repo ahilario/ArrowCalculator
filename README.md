@@ -28,7 +28,7 @@ Not a coder by profession so please excuse the messy code.
 
 
 
-# Equations and Assumptions
+# Assumptions
 
 From the analysis of various Arrow Spine charts from popular arrow manufacturer's, I've derived the following equation
 that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow Length, and Arrow Spine
@@ -41,7 +41,10 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 * aggregateRegValuesSlopeIntercept = -0.174
 * aggregateRegValuesIntSlope = -3.885
 * aggregateRegValuesIntIntercept = 237.637
+* Will also be using a default Drag Coefficient of 2, but feel free to play around with it. Per the whitepaper: Meyer, H.O. (2015) Applications of Physics to Archery
 
+
+# Equations
 
 * Optimal Point Weight [gr]
 
@@ -189,5 +192,4 @@ def calculate_time(initial_velocity, area_cross_section ,coefficient_drag, arrow
     return np.array(t_list)
 
 
-Will also be using a default Drag Coefficient of 2, but feel free to play around with it.
-Per the whitepaper: Meyer, H.O. (2015) Applications of Physics to Archery
+
