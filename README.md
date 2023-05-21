@@ -137,6 +137,7 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 ### Calculate Speed
 * calculate_speed is a function listed below that iterates over a 1ms time interval and calculates the new velocity after effects from Air Density, Arrow Cross Sectional Area and Drag Coefficient. And determines the velocity at a given distance
 
+```
 def calculate_speed(initial_velocity, area_cross_section ,coefficient_drag, arrow_mass, distance):
     '''
     returns an array of different velocities given different initial_velocity
@@ -181,16 +182,17 @@ def calculate_speed(initial_velocity, area_cross_section ,coefficient_drag, arro
 
     # Return the velocity in feet per second
     return np.array(v_list)
-
+```
 
 ### Calculate Time of Flight
 * Calculate_time is a function listed below that iterates over a 1ms time interval and calculates the new velocity after effects from Air Density, Arrow Cross Sectional Area and Drag Coefficient. And determines the time of flight to reach a given distance
 
+```
 def calculate_time(initial_velocity, area_cross_section ,coefficient_drag, arrow_mass, distance):
     '''
     returns an array of different time of flights given different initial_velocity
     '''
-
+    
     # Constants
     air_density = 0.0752  # lb/ft^3
     if isinstance(initial_velocity, float):
@@ -207,9 +209,9 @@ def calculate_time(initial_velocity, area_cross_section ,coefficient_drag, arrow
             distance_traveled = distance_traveled + velocity * dt
             if distance_traveled >= distance:
                 break
-        
+
         return time_of_flight
-        
+
     t_list = []
     for i in range(len(initial_velocity)):
         iv = initial_velocity[i]
@@ -230,6 +232,6 @@ def calculate_time(initial_velocity, area_cross_section ,coefficient_drag, arrow
 
     # Return the velocity in feet per second
     return np.array(t_list)
-
+```
 
 
