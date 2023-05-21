@@ -65,6 +65,29 @@ Below is an example where I compare two options for a 200 spine arrow for my PSE
 * Explore Impulse, or the dynamics during impact with animal skin
 * Explore penetration with modeling ballistics dynamics through the animal
 
+
+# How to run Arrow Calculator
+Here's all the packages/libraries and versions I used. To install them either follow the corresponding links
+
+* Python 3.8.8 https://wiki.python.org/moin/BeginnersGuide/Download
+* Jupyter Notebook 6.3.0 https://jupyter.org/install
+* Bokeh 2.3.2 https://docs.bokeh.org/en/latest/docs/first_steps/installation.html
+* Pandas 1.2.4 https://pandas.pydata.org/docs/getting_started/install.html
+* Numpy 1.20.1 https://numpy.org/install/
+* Sklearn 0.24.1 https://scikit-learn.org/stable/install.html
+
+Or follow this step by step:
+* Install at least Python 3.8.8 https://wiki.python.org/moin/BeginnersGuide/Download
+* Download the ArrowCalculator repository from GitHub
+* Open Terminal
+* Change to the ArrowCalculator directory/folder
+* Type `pip install -r requirements.txt`
+* Type `jupyter notebook` this should open up a local host webpage where you can again navigate to the ArrowCalculator directory/folder
+* Click ArrowSpineCharts-withBounds-Final.ipynb
+* Towards the top click Kernal>"Restart @ Run All"
+* Scroll to the bottom and play around with the sliders to update the plots in real time
+* Enjoy!
+
 # Assumptions
 
 From the analysis of various Arrow Spine charts from popular arrow manufacturer's, I've derived the following equation
