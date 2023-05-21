@@ -42,7 +42,9 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 * aggregateRegValuesIntSlope = -3.885
 * aggregateRegValuesIntIntercept = 237.637
 
+
 * Optimal Point Weight [gr]
+
 calcOpPointWeight = 150+25/5 * (-0.252 * chosenIBO + 81.8 -calcPoundage + 
                     (aggregateRegValuesSlopeSlope*chosenArrowLength 
                     + aggregateRegValuesSlopeIntercept) * chosenSpine 
