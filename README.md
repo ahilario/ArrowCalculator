@@ -30,7 +30,7 @@ Not a coder by profession so please excuse the messy code.
 
 Below is an example where I compare two options for a 200 spine arrow for my PSE Mach 34 with an IBO of 335 FPS, and 71# draw at 29" draw length. Specficifcally a higher FOC (shout out to the Ranch Fairy and Dr. Ashby) and Weight option, the Sirius Orion in Blue, and an ultra fast option, the Victory RIP XV in Orange. Here's some takeaways:
 
-* The Orion has a higher Optimal Point Weight, Total Arrow Mass @ 547gr, and FOC @ 18.39%
+* The Orion has a higher Optimal Point Weight, Total Arrow Mass @ 547gr, and FOC @ 18.39%, almost considered Extreme FOC
 * The Orion maintains Speed (FPS), Momentum and Kinetic Energy over distance better
 * To venture into the 600-700gr and >20% FOC regime, I'd need to drop down to between a 50-60# draw. This would have marginal impact on momentum, but take around a minus 30-50 fps hit, increase of 30-60ms time to target at 20yd, and dip from the Extreme Game Animal Kinetic Energy terriroty to Large Game Animals.
 * The Victory RIP XV, saves about 130ms time to target at 60yd, and starts in the Large Game Animal terriroty at 60yd right off the bat at 70# draw
