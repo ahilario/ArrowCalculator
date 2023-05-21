@@ -2,6 +2,7 @@
 My semi-scratchpad and visualization dashboard to plan for an arrow set up
 
 
+# Introduction
 
 This code is meant to explore the relationships between different arrow and bow variables 
 such as Arrow Length, Arrow GPI, Arrow Spine, Arrow Component weight, etc. and the Bow Poundage
@@ -27,7 +28,7 @@ Not a coder by profession so please excuse the messy code.
 
 
 
-
+# Equations
 
 From the analysis of various Arrow Spine charts from popular arrow manufacturer's, I've derived the following equation
 that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow Length, and Arrow Spine
