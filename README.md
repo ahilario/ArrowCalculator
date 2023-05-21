@@ -28,23 +28,24 @@ Not a coder by profession so please excuse the messy code.
 
 
 
-# Equations
+# Equations and Assumptions
 
 From the analysis of various Arrow Spine charts from popular arrow manufacturer's, I've derived the following equation
 that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow Length, and Arrow Spine
 
-Nominal Starting Point Weight is 150 grains
-Assume Relationship between Nominal Starting Point Weight and Effective Poundage is 25:5 (From manufacturers)
-IBO to Poundage Slope is 0.252
-IBO to Poundage Intercept is -81.8
-Aggregate Linear Regression Values
-ggregateRegValuesSlopeSlope = -0.001
-aggregateRegValuesSlopeIntercept = -0.174
-aggregateRegValuesIntSlope = -3.885
-aggregateRegValuesIntIntercept = 237.637
+* Nominal Starting Point Weight is 150 grains
+* Assume Relationship between Nominal Starting Point Weight and Effective Poundage is 25:5 (From manufacturers)
+* IBO to Poundage Slope is 0.252
+* IBO to Poundage Intercept is -81.8
+# Aggregate Linear Regression Values
+* ggregateRegValuesSlopeSlope = -0.001
+* aggregateRegValuesSlopeIntercept = -0.174
+* aggregateRegValuesIntSlope = -3.885
+* aggregateRegValuesIntIntercept = 237.637
 
 So the Optimal Point Weight will be calulated by the following equation:
 
+# Equations
 calcOpPointWeight = 150+25/5 * (-0.252 * chosenIBO + 81.8 -calcPoundage + 
                     (aggregateRegValuesSlopeSlope*chosenArrowLength 
                     + aggregateRegValuesSlopeIntercept) * chosenSpine 
@@ -53,9 +54,8 @@ calcOpPointWeight = 150+25/5 * (-0.252 * chosenIBO + 81.8 -calcPoundage +
 
 
 
-Other Equations used in this code:
-
-#totalArrowMass [gr]
+* Total Arrow Mass [gr]
+*
 calcTotalArrowMass = chosenNockWeight + chosenArrowWrapWeight + chosenFletchNumber * chosenFletchWeight + chosenArrowGPI * chosenArrowLength + calcOpPointWeight
 
 #FOC [%]      
