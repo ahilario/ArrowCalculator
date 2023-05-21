@@ -39,6 +39,7 @@ Below is an example where I compare two options for a 200 spine arrow for my PSE
   <img src="./ExampleOrionvsRIPXV.png">
 </p>
 
+
 ### Legend
 * Blue - Sirus Orion
 * Orange - Victory IP XV
