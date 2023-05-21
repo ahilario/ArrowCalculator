@@ -10,14 +10,15 @@ with one critical assumption/restraint:
 
 That there is an optimal Point Weight for a given Arrow Length, Arrow Spine, Bow Poundage, and Bow IBO,
 because an arrow is similar to a mass+spring system and there's a sweet spot between under and over spined
-arrow setups.
+arrow setups. Ideally, this optimal point weight should make it easier to get a bullet hole with bare shaft paper
+tuning right from the get go assuming your rest, cams, and D-loop are where they're supposed to be.
 
 The method for determining an Arrow Manufacturer's recommended Spine for a given Bow IBO, Bow Poundage, 
 Arrow Length, and Point Weight confusing, much varied between brands, and do not offer a high resolution 
 nor intuitively visual interface to explore arrow dynamics.
 
-Although one could make a far underspined or far overspined arrow setup, and still have a successful hunt,
-I'm more interested in geeking out and providing a tool for fellow archers and hunters.
+Although one could make a far underspined or far overspined arrow setup, paper tune to get a bullet hole, 
+and still have a successful hunt, I'm more interested in geeking out and providing a tool for fellow archers and hunters.
 
 These values aren't meant to be exact, but it should get you directionally where you want to go, and in
 the ballpark.
@@ -27,7 +28,7 @@ Not a coder by profession so please excuse the messy code.
 
 # Example and Quick Takeaways
 
-Below is an example where I compare two options for a 200 spine arrow for my PSE Mach 34 with an IBO of 335 FPS, and 71# draw at 29" draw length. Specficifcally a higher FOC and Weight option, the Sirius Orion in Blue, and an ultra fast option, the Victory RIP XV in Orange. Here's some takeaways:
+Below is an example where I compare two options for a 200 spine arrow for my PSE Mach 34 with an IBO of 335 FPS, and 71# draw at 29" draw length. Specficifcally a higher FOC (shout out to the Ranch Fairy and Dr. Ashby) and Weight option, the Sirius Orion in Blue, and an ultra fast option, the Victory RIP XV in Orange. Here's some takeaways:
 
 * The Orion has a higher Optimal Point Weight, Total Arrow Mass @ 547gr, and FOC @ 18.39%
 * The Orion maintains Speed (FPS), Momentum and Kinetic Energy over distance better
@@ -45,18 +46,22 @@ Below is an example where I compare two options for a 200 spine arrow for my PSE
 * Dash-Dot Line - at 40 yd distance
 * Dotted Line - at 60yd distance
 
-### FOC Color Band Legend
-* Red - <10%
-* Light Blue - 10-15%
-* Light-Medium Blue - 15-19%
-* Medium Blue - 19-30%
-* Dark Blue - >30%
+### FOC Color Band Legend (per Ashby Reports https://static1.squarespace.com/static/5d0443b188b6c900011e0ccc/t/5e9378b48f4a085e431232d4/1586722996915/2019+Terminal+Arrow+Performance+Update.pdf)
+* Red - Normal FOC <12%
+* Light Blue - High FOC 12-19%
+* Medium Blue - Extreme FOC 19-30%
+* Dark Blue - Ultra Extreme FOC >30%
 
 ### Kinetic Energy Color Band Legend
-* Red - Small Game - 25ft lbs... <34J
-* Light Blue - Medium - Deer 25-41... 35-56J
-* Light-Medium Blue - Large - Elk 41-65...  56-88
-* Dark Blue - Extreme - Moose 65+... >88
+* Red - Small Game - 25ft lbs, <34J
+* Light Blue - Medium - Deer 25-41ft lbs, 35-56J
+* Medium Blue - Large - Elk 41-65ft lbs,  56-88J
+* Dark Blue - Extreme - Moose 65+ft lbs, >88J
+
+# Future Work
+* Get this on an actual site so folks don't need to install Python, Jupyter Notebook, and a bunch of libraries to play with it realtime
+* Explore Impulse, or the dynamics during impact with animal skin
+* Explore penetration with modeling ballistics dynamics through the animal
 
 # Assumptions
 
@@ -67,7 +72,7 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 * Assume Relationship between Nominal Starting Point Weight and Effective Poundage is 25:5 (From manufacturers)
 * IBO to Poundage Slope is 0.252
 * IBO to Poundage Intercept is -81.8
-* Will also be using a default Drag Coefficient of 2, but feel free to play around with it. Per the whitepaper: Meyer, H.O. (2015) Applications of Physics to Archery
+* Will also be using a default Drag Coefficient of 2, but feel free to play around with it. Per the whitepaper: Meyer, H.O. (2015) Applications of Physics to Archery https://arxiv.org/pdf/1511.02250.pdf
 
 ### Linear Regression parameters derived from various arrow manufacturer spine charts. See below for plots
 * aggregateRegValuesSlopeSlope = -0.001
