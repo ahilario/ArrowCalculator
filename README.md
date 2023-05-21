@@ -37,12 +37,17 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 * Assume Relationship between Nominal Starting Point Weight and Effective Poundage is 25:5 (From manufacturers)
 * IBO to Poundage Slope is 0.252
 * IBO to Poundage Intercept is -81.8
+* Will also be using a default Drag Coefficient of 2, but feel free to play around with it. Per the whitepaper: Meyer, H.O. (2015) Applications of Physics to Archery
+
+### Linear Regression parameters derived from various arrow manufacturer spine charts. See below for plots
 * aggregateRegValuesSlopeSlope = -0.001
 * aggregateRegValuesSlopeIntercept = -0.174
 * aggregateRegValuesIntSlope = -3.885
 * aggregateRegValuesIntIntercept = 237.637
-* Will also be using a default Drag Coefficient of 2, but feel free to play around with it. Per the whitepaper: Meyer, H.O. (2015) Applications of Physics to Archery
 
+<p align="center">
+  <img src="./SpineVsEffectivePoundagebyArrowLength.png" alt="Size Limit CLI" width="738">
+</p>
 
 # Equations
 
