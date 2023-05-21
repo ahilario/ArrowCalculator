@@ -46,7 +46,7 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 * aggregateRegValuesIntIntercept = 237.637
 
 <p align="center">
-  <img src="./SpineVsEffectivePoundagebyArrowLength.png" alt="Size Limit CLI" width="738">
+  <img src="./SpineVsEffectivePoundagebyArrowLength.png">
 </p>
 
 # Equations
