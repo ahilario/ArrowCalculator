@@ -37,15 +37,10 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 * Assume Relationship between Nominal Starting Point Weight and Effective Poundage is 25:5 (From manufacturers)
 * IBO to Poundage Slope is 0.252
 * IBO to Poundage Intercept is -81.8
-
-
-# Aggregate Linear Regression Values
 * aggregateRegValuesSlopeSlope = -0.001
 * aggregateRegValuesSlopeIntercept = -0.174
 * aggregateRegValuesIntSlope = -3.885
 * aggregateRegValuesIntIntercept = 237.637
-
-So the Optimal Point Weight will be calulated by the following equation:
 
 * Optimal Point Weight [gr]
 calcOpPointWeight = 150+25/5 * (-0.252 * chosenIBO + 81.8 -calcPoundage + 
@@ -53,8 +48,6 @@ calcOpPointWeight = 150+25/5 * (-0.252 * chosenIBO + 81.8 -calcPoundage +
                     + aggregateRegValuesSlopeIntercept) * chosenSpine 
                     + aggregateRegValuesIntSlope*chosenArrowLength 
                     + aggregateRegValuesIntIntercept)  
-
-
 
 * Total Arrow Mass [gr]
 
