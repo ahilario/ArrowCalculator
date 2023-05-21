@@ -25,8 +25,11 @@ the ballpark.
 Not a coder by profession so please excuse the messy code.
 
 
+# Example and Quick Takeaways
 
-
+<p align="center">
+  <img src="./ExampleOrionvsRIPXV.png">
+</p>
 
 # Assumptions
 
