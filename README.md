@@ -12,11 +12,11 @@ That there is an optimal Point Weight for a given Arrow Length, Arrow Spine, Bow
 because an arrow is similar to a mass+spring system and there's a sweet spot between under and over spined
 arrow setups.
 
-Arrow Manufacturer's recommended Spine for a given Bow IBO, Bow Poundage, Arrow Length, and Point Weight
-are confusing, much varied between brands, and do not offer a high resolution nor intuitively visual interface
-to explore arrow dynamics.
+The method for determining an Arrow Manufacturer's recommended Spine for a given Bow IBO, Bow Poundage, 
+Arrow Length, and Point Weight confusing, much varied between brands, and do not offer a high resolution 
+nor intuitively visual interface to explore arrow dynamics.
 
-Although one could make an far underspined or far overspined arrow setup, and still have a successful hunt,
+Although one could make a far underspined or far overspined arrow setup, and still have a successful hunt,
 I'm more interested in geeking out and providing a tool for fellow archers and hunters.
 
 These values aren't meant to be exact, but it should get you directionally where you want to go, and in
@@ -27,9 +27,36 @@ Not a coder by profession so please excuse the messy code.
 
 # Example and Quick Takeaways
 
+Below is an example where I compare two options for a 200 spine arrow for my PSE Mach 34 with an IBO of 335 FPS, and 71# draw at 29" draw length. Specficifcally a higher FOC and Weight option, the Sirius Orion in Blue, and an ultra fast option, the Victory RIP XV in Orange. Here's some takeaways:
+
+* The Orion has a higher Optimal Point Weight, Total Arrow Mass @ 547gr, and FOC @ 18.39%
+* The Orion maintains Speed (FPS), Momentum and Kinetic Energy over distance better
+* To venture into the 600-700gr and >20% FOC regime, I'd need to drop down to between a 50-60# draw. This would have marginal impact on momentum, but take around a minus 30-50 fps hit, increase of 30-60ms time to target at 20yd, and dip from the Extreme Game Animal Kinetic Energy terriroty to Large Game Animals.
+* The Victory RIP XV, saves about 130ms time to target at 60yd, and starts in the Large Game Animal terriroty at 60yd right off the bat at 70# draw
+
 <p align="center">
   <img src="./ExampleOrionvsRIPXV.png">
 </p>
+### Legend
+* Blue - Sirus Orion
+* Orange - Victory IP XV
+* Solid Line - Nominal or at 0yd distance
+* Dashed Line - at 20yd distance
+* Dash-Dot Line - at 40 yd distance
+* Dotted Line - at 60yd distance
+
+### FOC Color Band Legend
+* Red - <10%
+* Light Blue - 10-15%
+* Light-Medium Blue - 15-19%
+* Medium Blue - 19-30%
+* Dark Blue - >30%
+
+### Kinetic Energy Color Band Legend
+* Red - Small Game - 25ft lbs... <34J
+* Light Blue - Medium - Deer 25-41... 35-56J
+* Light-Medium Blue - Large - Elk 41-65...  56-88
+* Dark Blue - Extreme - Moose 65+... >88
 
 # Assumptions
 
