@@ -37,15 +37,17 @@ that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow 
 * Assume Relationship between Nominal Starting Point Weight and Effective Poundage is 25:5 (From manufacturers)
 * IBO to Poundage Slope is 0.252
 * IBO to Poundage Intercept is -81.8
+
+
 # Aggregate Linear Regression Values
-* ggregateRegValuesSlopeSlope = -0.001
+* aggregateRegValuesSlopeSlope = -0.001
 * aggregateRegValuesSlopeIntercept = -0.174
 * aggregateRegValuesIntSlope = -3.885
 * aggregateRegValuesIntIntercept = 237.637
 
 So the Optimal Point Weight will be calulated by the following equation:
 
-# Equations
+* Optimal Point Weight [gr]
 calcOpPointWeight = 150+25/5 * (-0.252 * chosenIBO + 81.8 -calcPoundage + 
                     (aggregateRegValuesSlopeSlope*chosenArrowLength 
                     + aggregateRegValuesSlopeIntercept) * chosenSpine 
@@ -55,10 +57,11 @@ calcOpPointWeight = 150+25/5 * (-0.252 * chosenIBO + 81.8 -calcPoundage +
 
 
 * Total Arrow Mass [gr]
-*
+
 calcTotalArrowMass = chosenNockWeight + chosenArrowWrapWeight + chosenFletchNumber * chosenFletchWeight + chosenArrowGPI * chosenArrowLength + calcOpPointWeight
 
-#FOC [%]      
+* FOC [%]
+
 calcFOC = (100 *((chosenNockWeight * chosenNockThroatAdder + chosenArrowWrapLength * (chosenNockThroatAdder + chosenArrowWrapLength/2) 
             + (chosenFletchNumber * chosenFletchWeight) * (chosenFletchDistanceFromShaftEnd + chosenFletchLength/3) 
             + (chosenArrowGPI * chosenArrowLength) * (chosenNockThroatAdder + chosenArrowLength/2) 
@@ -66,34 +69,38 @@ calcFOC = (100 *((chosenNockWeight * chosenNockThroatAdder + chosenArrowWrapLeng
             /(calcTotalArrowMass) 
             - (chosenArrowLength + chosenNockThroatAdder)/2))/(chosenArrowLength + chosenNockThroatAdder)     
 
-#Nominal Kinetic Energy [J]
+* Nominal Kinetic Energy [J]
+
 calcKENominal = (0.5*((350/15.43)/1000)*((chosenIBO-10*(30-chosenDrawLength)-2*(70-calcPoundage))*0.3048)**2)
 
-#FPS [f/s]
+* FPS [f/s]
+
 calcFPS = (((calcKENominal*2)/((calcTotalArrowMass/15.43)/1000))**0.5)/0.3048
 
-#Cross Sectional area of arrow
+* Cross Sectional area of arrow
+
 area_cross_section = np.pi*((chosenArrowDiam/12)/2)**2 + chosenFletchNumber * 0.5 * chosenFletchLength/12 * chosenFletchHeight/12 * chosenFletchOffset/90  # ft^2
 
-#Velocity at certain distances [fps]
-#calculate_speed is a function listed below that iterates over a 1ms time interval and calculates the new velocity after effects from Air Density, Arrow Cross Sectional Area and Drag Coefficient.
-#And determines the velocity at a given distance
+* Velocity at certain distances [fps]
+
+calculate_speed is a function listed below that iterates over a 1ms time interval and calculates the new velocity after effects from Air Density, Arrow Cross Sectional Area and Drag Coefficient. And determines the velocity at a given distance
 calcFPS20yd = calculate_speed(calcFPS, area_cross_section, chosenCoefDrag, calcTotalArrowMass/7000, 60)
 calcFPS40yd = calculate_speed(calcFPS, area_cross_section, chosenCoefDrag, calcTotalArrowMass/7000, 120)
 calcFPS60yd = calculate_speed(calcFPS, area_cross_section, chosenCoefDrag, calcTotalArrowMass/7000, 180)
 
-#Time of Flight [s]
-#calculate_time is a function listed below that iterates over a 1ms time interval and calculates the new velocity after effects from Air Density, Arrow Cross Sectional Area and Drag Coefficient.
-#And determines the time of flight to reach a given distance
+* Time of Flight [s]
+
+Calculate_time is a function listed below that iterates over a 1ms time interval and calculates the new velocity after effects from Air Density, Arrow Cross Sectional Area and Drag Coefficient. And determines the time of flight to reach a given distance
 calcTOF20yd = calculate_time(calcFPS, area_cross_section, chosenCoefDrag, calcTotalArrowMass/7000, 60)
 calcTOF40yd = calculate_time(calcFPS, area_cross_section, chosenCoefDrag, calcTotalArrowMass/7000, 120)
 calcTOF60yd = calculate_time(calcFPS, area_cross_section, chosenCoefDrag, calcTotalArrowMass/7000, 180)
   
+* Kinetic Energy [J]
 
-#Kinetic Energy [J]
 calcKE = 0.5*((calcMPS**2)*((calcTotalArrowMass/15.43)/1000))
 
-#Momentum [kg*m/s]
+* Momentum [kg*m/s]
+
 calcMomentum = ((calcTotalArrowMass/15.43)/1000)*calcFPS *0.3048
 
 def calculate_speed(initial_velocity, area_cross_section ,coefficient_drag, arrow_mass, distance):
