@@ -1,0 +1,34 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrow Spine Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Arrow Spine Calculator</h1>
+        <div class="controls">
+            <label for="arrowLength">Arrow Length:</label>
+            <input type="number" id="arrowLength" min="26" max="32" step="1" value="28">
+            
+            <label for="poundageType">Poundage Type:</label>
+            <select id="poundageType">
+                <option value="Nominal">Nominal</option>
+                <option value="LowerBound">Lower Bound</option>
+                <option value="UpperBound">Upper Bound</option>
+            </select>
+            
+            <button id="calculate">Calculate</button>
+        </div>
+        <div class="chart-container">
+            <canvas id="spineChart"></canvas>
+        </div>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>

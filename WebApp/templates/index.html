@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrow Spine Calculator</title>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.3.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.3.min.js"></script>
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.3.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 28px;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: minmax(300px, 1fr) minmax(400px, 2fr) minmax(300px, 1fr);
+            gap: 15px;
+            align-items: stretch;
+            justify-content: center;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .setup-column {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fafafa;
+        }
+        .setup-column.setup-1 {
+            border-color: #1976D2;
+        }
+        .setup-column.setup-2 {
+            border-color: #FF9800;
+        }
+        .setup-title {
+            text-align: center;
+            margin: 0 0 10px 0;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .setup-1 .setup-title {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        .setup-2 .setup-title {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+        .middle-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .results-section {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .results-section h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+        .results-values {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        .result-item {
+            background: #f5f5f5;
+            padding: 5px;
+            border-radius: 3px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .result-item .label {
+            font-size: 9px;
+            color: #666;
+        }
+        .result-item .value {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+        .setup-1 .result-item .value {
+            color: #1976D2;
+        }
+        .setup-2 .result-item .value {
+            color: #FF9800;
+        }
+        .controls-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1400px) {
+            .main-layout {
+                grid-template-columns: minmax(280px, 1fr) minmax(350px, 1.8fr) minmax(280px, 1fr);
+                gap: 10px;
+            }
+            .control-item label {
+                font-size: 9px;
+            }
+            .control-item .value {
+                font-size: 9px;
+                width: 30px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .middle-section {
+                order: 3;
+            }
+            .setup-column.setup-1 {
+                order: 1;
+            }
+            .setup-column.setup-2 {
+                order: 2;
+            }
+            .plots-container {
+                max-height: 600px;
+            }
+        }
+        .control-group {
+            flex: 1;
+            min-width: 160px;
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .control-group h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 12px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 3px;
+        }
+        .setup-1 .control-group h3 {
+            border-bottom-color: #1976D2;
+        }
+        .setup-2 .control-group h3 {
+            border-bottom-color: #FF9800;
+        }
+        .control-item {
+            margin: 3px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .control-item label {
+            flex: 1;
+            font-size: 10px;
+            color: #666;
+        }
+        .control-item input[type="range"] {
+            flex: 1.2;
+            margin: 0 5px;
+            height: 20px;
+        }
+        .control-item .value {
+            width: 35px;
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+            font-size: 10px;
+        }
+        .plots-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 400px);
+            gap: 15px;
+            width: 100%;
+        }
+        .plot-wrapper {
+            background: white;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .plot-wrapper > div {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .plot-wrapper .bk-root {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 10;
+            font-size: 12px;
+            color: #666;
+        }
+        .loading.show {
+            display: block;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        .error.show {
+            display: block;
+        }
+        
+        /* Documentation Section */
+        .documentation-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .documentation-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
+        }
+        .doc-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .doc-content h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+        .doc-content h4 {
+            color: #666;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .doc-content pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .doc-content code {
+            background: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .doc-content pre code {
+            background: none;
+            padding: 0;
+        }
+        .doc-content ul, .doc-content ol {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        .doc-content li {
+            margin-bottom: 8px;
+        }
+        .doc-content p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .doc-content strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Arrow Configuration Calculator</h1>
+        
+        <div class="main-layout">
+            <!-- Setup 1 -->
+            <div class="setup-column setup-1">
+                <h2 class="setup-title">Setup 1</h2>
+                
+                <!-- Results for Setup 1 -->
+                <div class="results-section" id="results1" style="display: none;">
+                    <h3 style="text-align: center;">Results</h3>
+                    <div class="results-values" id="resultsValues1"></div>
+                </div>
+                
+                <div class="controls-container">
+                    <!-- Bow Configuration -->
+                    <div class="control-group">
+                        <h3>Bow Configuration</h3>
+                        <div class="control-item">
+                            <label for="poundage1">Draw Weight</label>
+                            <input type="range" id="poundage1" min="30" max="90" step="1" value="71">
+                            <span class="value" id="poundage1Value">71</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="ibo1">IBO Speed</label>
+                            <input type="range" id="ibo1" min="300" max="360" step="1" value="335">
+                            <span class="value" id="ibo1Value">335</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="drawLength1">Draw Length</label>
+                            <input type="range" id="drawLength1" min="24" max="32" step="0.5" value="29">
+                            <span class="value" id="drawLength1Value">29</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Arrow Shaft Configuration -->
+                    <div class="control-group">
+                        <h3>Arrow Shaft</h3>
+                        <div class="control-item">
+                            <label for="spine1">Spine</label>
+                            <input type="range" id="spine1" min="150" max="400" step="10" value="200">
+                            <span class="value" id="spine1Value">200</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowGPI1">GPI</label>
+                            <input type="range" id="arrowGPI1" min="5" max="16" step="0.1" value="10.7">
+                            <span class="value" id="arrowGPI1Value">10.7</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowLength1">Length</label>
+                            <input type="range" id="arrowLength1" min="24" max="32" step="0.25" value="28.25">
+                            <span class="value" id="arrowLength1Value">28.25</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowDiam1">Diameter</label>
+                            <input type="range" id="arrowDiam1" min="0.166" max="0.300" step="0.001" value="0.166">
+                            <span class="value" id="arrowDiam1Value">0.166</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Nock Configuration -->
+                    <div class="control-group">
+                        <h3>Nock</h3>
+                        <div class="control-item">
+                            <label for="nockWeight1">Nock Weight</label>
+                            <input type="range" id="nockWeight1" min="1" max="30" step="1" value="6">
+                            <span class="value" id="nockWeight1Value">6</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="nockThroatAdder1">Nock Throat</label>
+                            <input type="range" id="nockThroatAdder1" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value" id="nockThroatAdder1Value">0.5</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Wrap Configuration -->
+                    <div class="control-group">
+                        <h3>Wrap</h3>
+                        <div class="control-item">
+                            <label for="arrowWrapWeight1">Wrap Weight</label>
+                            <input type="range" id="arrowWrapWeight1" min="0" max="20" step="0.1" value="0">
+                            <span class="value" id="arrowWrapWeight1Value">0</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowWrapLength1">Wrap Length</label>
+                            <input type="range" id="arrowWrapLength1" min="0" max="10" step="1" value="4">
+                            <span class="value" id="arrowWrapLength1Value">4</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Fletching Configuration -->
+                    <div class="control-group">
+                        <h3>Fletching</h3>
+                        <div class="control-item">
+                            <label for="fletchNumber1">Number</label>
+                            <input type="range" id="fletchNumber1" min="3" max="6" step="1" value="4">
+                            <span class="value" id="fletchNumber1Value">4</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchWeight1">Weight Each</label>
+                            <input type="range" id="fletchWeight1" min="1" max="10" step="0.1" value="5">
+                            <span class="value" id="fletchWeight1Value">5</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchLength1">Length</label>
+                            <input type="range" id="fletchLength1" min="1" max="5" step="0.05" value="2.25">
+                            <span class="value" id="fletchLength1Value">2.25</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchHeight1">Height</label>
+                            <input type="range" id="fletchHeight1" min="0.1" max="1" step="0.01" value="0.465">
+                            <span class="value" id="fletchHeight1Value">0.465</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchDistance1">Distance</label>
+                            <input type="range" id="fletchDistance1" min="0" max="2" step="0.05" value="0.75">
+                            <span class="value" id="fletchDistance1Value">0.75</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchOffset1">Offset</label>
+                            <input type="range" id="fletchOffset1" min="0" max="10" step="1" value="3">
+                            <span class="value" id="fletchOffset1Value">3</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Physics Configuration -->
+                    <div class="control-group">
+                        <h3>Physics</h3>
+                        <div class="control-item">
+                            <label for="coefDrag1">Drag Coef</label>
+                            <input type="range" id="coefDrag1" min="0.1" max="3" step="0.1" value="2">
+                            <span class="value" id="coefDrag1Value">2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Middle Section with Plots -->
+            <div class="middle-section">
+                <div class="loading">
+                    <p>Calculating...</p>
+                </div>
+                
+                <div class="error" id="error"></div>
+                
+                <div class="plots-container" id="plots"></div>
+            </div>
+            
+            <!-- Setup 2 -->
+            <div class="setup-column setup-2">
+                <h2 class="setup-title">Setup 2</h2>
+                
+                <!-- Results for Setup 2 -->
+                <div class="results-section" id="results2" style="display: none;">
+                    <h3 style="text-align: center;">Results</h3>
+                    <div class="results-values" id="resultsValues2"></div>
+                </div>
+                
+                <div class="controls-container">
+                    <!-- Bow Configuration -->
+                    <div class="control-group">
+                        <h3>Bow Configuration</h3>
+                        <div class="control-item">
+                            <label for="poundage2">Draw Weight</label>
+                            <input type="range" id="poundage2" min="30" max="90" step="1" value="71">
+                            <span class="value" id="poundage2Value">71</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="ibo2">IBO Speed</label>
+                            <input type="range" id="ibo2" min="300" max="360" step="1" value="335">
+                            <span class="value" id="ibo2Value">335</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="drawLength2">Draw Length</label>
+                            <input type="range" id="drawLength2" min="24" max="32" step="0.5" value="29">
+                            <span class="value" id="drawLength2Value">29</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Arrow Shaft Configuration -->
+                    <div class="control-group">
+                        <h3>Arrow Shaft</h3>
+                        <div class="control-item">
+                            <label for="spine2">Spine</label>
+                            <input type="range" id="spine2" min="150" max="400" step="10" value="300">
+                            <span class="value" id="spine2Value">300</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowGPI2">GPI</label>
+                            <input type="range" id="arrowGPI2" min="5" max="16" step="0.1" value="7.1">
+                            <span class="value" id="arrowGPI2Value">7.1</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowLength2">Length</label>
+                            <input type="range" id="arrowLength2" min="24" max="32" step="0.25" value="28.25">
+                            <span class="value" id="arrowLength2Value">28.25</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowDiam2">Diameter</label>
+                            <input type="range" id="arrowDiam2" min="0.166" max="0.300" step="0.001" value="0.166">
+                            <span class="value" id="arrowDiam2Value">0.166</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Nock Configuration -->
+                    <div class="control-group">
+                        <h3>Nock</h3>
+                        <div class="control-item">
+                            <label for="nockWeight2">Nock Weight</label>
+                            <input type="range" id="nockWeight2" min="1" max="30" step="1" value="6">
+                            <span class="value" id="nockWeight2Value">6</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="nockThroatAdder2">Nock Throat</label>
+                            <input type="range" id="nockThroatAdder2" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value" id="nockThroatAdder2Value">0.5</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Wrap Configuration -->
+                    <div class="control-group">
+                        <h3>Wrap</h3>
+                        <div class="control-item">
+                            <label for="arrowWrapWeight2">Wrap Weight</label>
+                            <input type="range" id="arrowWrapWeight2" min="0" max="20" step="0.1" value="0">
+                            <span class="value" id="arrowWrapWeight2Value">0</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="arrowWrapLength2">Wrap Length</label>
+                            <input type="range" id="arrowWrapLength2" min="0" max="10" step="1" value="4">
+                            <span class="value" id="arrowWrapLength2Value">4</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Fletching Configuration -->
+                    <div class="control-group">
+                        <h3>Fletching</h3>
+                        <div class="control-item">
+                            <label for="fletchNumber2">Number</label>
+                            <input type="range" id="fletchNumber2" min="3" max="6" step="1" value="4">
+                            <span class="value" id="fletchNumber2Value">4</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchWeight2">Weight Each</label>
+                            <input type="range" id="fletchWeight2" min="1" max="10" step="0.1" value="5">
+                            <span class="value" id="fletchWeight2Value">5</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchLength2">Length</label>
+                            <input type="range" id="fletchLength2" min="1" max="5" step="0.05" value="2.25">
+                            <span class="value" id="fletchLength2Value">2.25</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchHeight2">Height</label>
+                            <input type="range" id="fletchHeight2" min="0.1" max="1" step="0.01" value="0.465">
+                            <span class="value" id="fletchHeight2Value">0.465</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchDistance2">Distance</label>
+                            <input type="range" id="fletchDistance2" min="0" max="2" step="0.05" value="0.75">
+                            <span class="value" id="fletchDistance2Value">0.75</span>
+                        </div>
+                        <div class="control-item">
+                            <label for="fletchOffset2">Offset</label>
+                            <input type="range" id="fletchOffset2" min="0" max="10" step="1" value="3">
+                            <span class="value" id="fletchOffset2Value">3</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Physics Configuration -->
+                    <div class="control-group">
+                        <h3>Physics</h3>
+                        <div class="control-item">
+                            <label for="coefDrag2">Drag Coef</label>
+                            <input type="range" id="coefDrag2" min="0.1" max="3" step="0.1" value="2">
+                            <span class="value" id="coefDrag2Value">2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Documentation Section -->
+        <div class="documentation-section">
+            <h2>🏹 ArrowCalculator</h2>
+            <div class="doc-content">
+                <p>My semi-scratchpad and visualization dashboard to plan for an arrow set up</p>
+                
+                <h3>Introduction</h3>
+                <p>This code is meant to explore the relationships between different arrow and bow variables 
+                such as Arrow Length, Arrow GPI, Arrow Spine, Arrow Component weight, etc. and the Bow Poundage
+                with one critical assumption/restraint:</p>
+                
+                <p>That there is an optimal Point Weight for a given Arrow Length, Arrow Spine, Bow Poundage, and Bow IBO,
+                because an arrow is similar to a mass+spring system and there's a sweet spot between under and over spined
+                arrow setups. Ideally, this optimal point weight should make it easier to get a bullet hole with bare shaft paper
+                tuning right from the get go assuming your rest, cams, and D-loop are where they're supposed to be.</p>
+                
+                <p>The method for determining an Arrow Manufacturer's recommended Spine for a given Bow IBO, Bow Poundage, 
+                Arrow Length, and Point Weight confusing, much varied between brands, and do not offer a high resolution 
+                nor intuitively visual interface to explore arrow dynamics.</p>
+                
+                <p>Although one could make a far underspined or far overspined arrow setup, paper tune to get a bullet hole, 
+                and still have a successful hunt, I'm more interested in geeking out and providing a tool for fellow archers and hunters.</p>
+                
+                <p>These values aren't meant to be exact, but it should get you directionally where you want to go, and in
+                the ballpark.</p>
+                
+                <h3>Example and Quick Takeaways</h3>
+                <p>Below is an example where I compare two options for a 200 spine arrow for my PSE Mach 34 with an IBO of 335 FPS, and 71# draw at 29" draw length. Specifically a higher FOC (shout out to the Ranch Fairy and Dr. Ashby) and Weight option, the Sirius Orion in Blue, and an ultra fast option, the Victory RIP XV in Orange. Here's some takeaways:</p>
+                
+                <ul>
+                    <li>The Orion has a higher Optimal Point Weight, Total Arrow Mass @ 547gr, and FOC @ 18.39%, almost considered Extreme FOC</li>
+                    <li>The Orion maintains Speed (FPS), Momentum and Kinetic Energy over distance better</li>
+                    <li>To venture into the 600-700gr and >20% FOC regime, I'd need to drop down to between a 50-60# draw. This would have marginal impact on momentum, but take around a minus 30-50 fps hit, increase of 30-60ms time to target at 20yd, and dip from the Extreme Game Animal Kinetic Energy territory to Large Game Animals.</li>
+                    <li>The Victory RIP XV, saves about 130ms time to target at 60yd, and starts in the Large Game Animal territory at 60yd right off the bat at 70# draw</li>
+                </ul>
+                
+                <p align="center">
+                    <img src="/images/ExampleOrionvsRIPXV.png" style="max-width: 100%; height: auto;">
+                </p>
+                
+                <h3>Legend</h3>
+                <ul>
+                    <li>Blue - Setup 1</li>
+                    <li>Orange - Setup 2</li>
+                    <li>Solid Line - Nominal or at 0yd distance</li>
+                    <li>Dashed Line - at 20yd distance</li>
+                    <li>Dash-Dot Line - at 40 yd distance</li>
+                    <li>Dotted Line - at 60yd distance</li>
+                </ul>
+                
+                <h4>FOC Color Band Legend (per Ashby Reports)</h4>
+                <ul>
+                    <li>Red - Normal FOC <12%</li>
+                    <li>Light Blue - High FOC 12-19%</li>
+                    <li>Medium Blue - Extreme FOC 19-30%</li>
+                    <li>Dark Blue - Ultra Extreme FOC >30%</li>
+                </ul>
+                
+                <h4>Kinetic Energy Color Band Legend</h4>
+                <ul>
+                    <li>Red - Small Game - 25ft lbs, <34J</li>
+                    <li>Light Blue - Medium - Deer 25-41ft lbs, 35-56J</li>
+                    <li>Medium Blue - Large - Elk 41-65ft lbs, 56-88J</li>
+                    <li>Dark Blue - Extreme - Moose 65+ft lbs, >88J</li>
+                </ul>
+                
+                <h3>Assumptions</h3>
+                <p>From the analysis of various Arrow Spine charts from popular arrow manufacturer's, I've derived the following equation
+                that calculates the Optimal Point Weight given the Bow IBO, Bow Poundage, Arrow Length, and Arrow Spine</p>
+                
+                <ul>
+                    <li>Nominal Starting Point Weight is 150 grains</li>
+                    <li>Assume Relationship between Nominal Starting Point Weight and Effective Poundage is 25:5 (From manufacturers)</li>
+                    <li>IBO to Poundage Slope is 0.252</li>
+                    <li>IBO to Poundage Intercept is -81.8</li>
+                    <li>Will also be using a default Drag Coefficient of 2, but feel free to play around with it. Per the whitepaper: Meyer, H.O. (2015) Applications of Physics to Archery https://arxiv.org/pdf/1511.02250.pdf</li>
+                </ul>
+                
+                <h4>Linear Regression parameters derived from various arrow manufacturer spine charts:</h4>
+                <ul>
+                    <li>aggregateRegValuesSlopeSlope = -0.001</li>
+                    <li>aggregateRegValuesSlopeIntercept = -0.174</li>
+                    <li>aggregateRegValuesIntSlope = -3.885</li>
+                    <li>aggregateRegValuesIntIntercept = 237.637</li>
+                </ul>
+                
+                <p align="center">
+                    <img src="/images/SpineVsEffectivePoundagebyArrowLength.png" style="max-width: 100%; height: auto;">
+                </p>
+                
+                <h3>Equations</h3>
+                
+                <h4>Optimal Point Weight [gr]</h4>
+                <pre><code>calcOpPointWeight = 150 + 25/5 * (-0.252 * chosenIBO + 81.8 - calcPoundage + 
+                    (aggregateRegValuesSlopeSlope * chosenArrowLength + 
+                     aggregateRegValuesSlopeIntercept) * chosenSpine + 
+                    aggregateRegValuesIntSlope * chosenArrowLength + 
+                    aggregateRegValuesIntIntercept)</code></pre>
+                
+                <h4>Total Arrow Mass [gr]</h4>
+                <pre><code>calcTotalArrowMass = chosenNockWeight + chosenArrowWrapWeight + 
+                     chosenFletchNumber * chosenFletchWeight + 
+                     chosenArrowGPI * chosenArrowLength + calcOpPointWeight</code></pre>
+                
+                <h4>FOC [%]</h4>
+                <pre><code>calcFOC = (100 * ((componentWeights * componentDistances) / totalMass - 
+          (arrowLength + nockThroat) / 2)) / (arrowLength + nockThroat)</code></pre>
+                
+                <h4>Nominal Kinetic Energy [J]</h4>
+                <pre><code>calcKENominal = 0.5 * ((350/15.43)/1000) * 
+                ((chosenIBO - 10*(30-chosenDrawLength) - 2*(70-calcPoundage)) * 0.3048)^2</code></pre>
+                
+                <h4>FPS [f/s]</h4>
+                <pre><code>calcFPS = (((calcKENominal * 2) / ((calcTotalArrowMass/15.43)/1000))^0.5) / 0.3048</code></pre>
+                
+                <h4>Cross Sectional Area of Arrow</h4>
+                <pre><code>area_cross_section = π * ((arrowDiam/12)/2)^2 + 
+                     fletchNumber * 0.5 * fletchLength/12 * 
+                     fletchHeight/12 * fletchOffset/90</code></pre>
+                
+                <h3>Web App Features</h3>
+                <ul>
+                    <li>Interactive sliders for all arrow and bow parameters</li>
+                    <li>Real-time calculations with dual setup comparison</li>
+                    <li>Visual plots showing relationships between poundage and calculated values</li>
+                    <li>Physics-based drag modeling for velocity calculations</li>
+                    <li>Responsive design that works on all screen sizes</li>
+                </ul>
+                
+                <h3>Future Work</h3>
+                <ul>
+                    <li>Explore Impulse, or the dynamics during impact with animal skin</li>
+                    <li>Explore penetration with modeling ballistics dynamics through the animal</li>
+                    <li>Add more arrow manufacturer data</li>
+                    <li>Include broadhead aerodynamics</li>
+                </ul>
+                
+                <h3>References</h3>
+                <ul>
+                    <li>Meyer, H.O. (2015) Applications of Physics to Archery - <a href="https://arxiv.org/pdf/1511.02250.pdf" target="_blank">https://arxiv.org/pdf/1511.02250.pdf</a></li>
+                    <li>Ashby Reports (2019) Terminal Arrow Performance Update - <a href="https://static1.squarespace.com/static/5d0443b188b6c900011e0ccc/t/5e9378b48f4a085e431232d4/1586722996915/2019+Terminal+Arrow+Performance+Update.pdf" target="_blank">Link</a></li>
+                </ul>
+                
+                <h3>Source Code</h3>
+                <p>This calculator is open source! View the code, contribute, or report issues on GitHub:</p>
+                <p style="text-align: center; margin: 20px 0;">
+                    <a href="https://github.com/ahilario/ArrowCalculator" target="_blank" style="display: inline-block; padding: 10px 20px; background: #24292e; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        <svg style="vertical-align: middle; margin-right: 8px;" height="20" width="20" viewBox="0 0 16 16" version="1.1" aria-hidden="true">
+                            <path fill="white" fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                        </svg>
+                        View on GitHub
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let updateTimer = null;
+        let isCalculating = false;
+        
+        // Update all slider values
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+            const valueSpan = document.getElementById(slider.id + 'Value');
+            
+            // Update value display immediately
+            slider.addEventListener('input', () => {
+                valueSpan.textContent = slider.value;
+            });
+            
+            // Calculate on both input (while dragging) and change (on release)
+            slider.addEventListener('input', () => {
+                if (!isCalculating) {
+                    clearTimeout(updateTimer);
+                    updateTimer = setTimeout(calculate, 100); // Faster debounce for smoother updates
+                }
+            });
+            
+            // Immediate calculation on mouse release
+            slider.addEventListener('change', () => {
+                clearTimeout(updateTimer);
+                calculate();
+            });
+        });
+        
+        // Calculate on page load
+        window.addEventListener('load', () => {
+            setTimeout(calculate, 500);
+            adjustPlotHeight();
+        });
+        
+        // Remove height constraint - let plots expand naturally
+        function adjustPlotHeight() {
+            // Function removed - plots will use their natural height
+        }
+        
+        async function calculate() {
+            if (isCalculating) return;
+            isCalculating = true;
+            
+            const loading = document.querySelector('.loading');
+            const error = document.getElementById('error');
+            const results1 = document.getElementById('results1');
+            const results2 = document.getElementById('results2');
+            
+            // Only show loading for longer operations
+            const loadingTimeout = setTimeout(() => {
+                loading.classList.add('show');
+            }, 200);
+            error.classList.remove('show');
+            
+            // Gather parameters for both setups
+            const params = {
+                setup1: gatherParams('1'),
+                setup2: gatherParams('2')
+            };
+            
+            try {
+                const response = await fetch('/calculate_comparison', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(params)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Display results for both setups
+                    displayResults(data.setup1.values, 'resultsValues1');
+                    displayResults(data.setup2.values, 'resultsValues2');
+                    
+                    // Display comparison plots
+                    displayPlots(data.plots);
+                    
+                    results1.style.display = 'block';
+                    results2.style.display = 'block';
+                } else {
+                    throw new Error(data.error || 'Calculation failed');
+                }
+            } catch (err) {
+                error.textContent = 'Error: ' + err.message;
+                error.classList.add('show');
+            } finally {
+                clearTimeout(loadingTimeout);
+                loading.classList.remove('show');
+                isCalculating = false;
+            }
+        }
+        
+        function gatherParams(suffix) {
+            return {
+                poundage: parseFloat(document.getElementById('poundage' + suffix).value),
+                ibo: parseFloat(document.getElementById('ibo' + suffix).value),
+                drawLength: parseFloat(document.getElementById('drawLength' + suffix).value),
+                spine: parseFloat(document.getElementById('spine' + suffix).value),
+                arrowGPI: parseFloat(document.getElementById('arrowGPI' + suffix).value),
+                arrowLength: parseFloat(document.getElementById('arrowLength' + suffix).value),
+                arrowDiam: parseFloat(document.getElementById('arrowDiam' + suffix).value),
+                nockWeight: parseFloat(document.getElementById('nockWeight' + suffix).value),
+                nockThroatAdder: parseFloat(document.getElementById('nockThroatAdder' + suffix).value),
+                arrowWrapWeight: parseFloat(document.getElementById('arrowWrapWeight' + suffix).value),
+                arrowWrapLength: parseFloat(document.getElementById('arrowWrapLength' + suffix).value),
+                fletchNumber: parseInt(document.getElementById('fletchNumber' + suffix).value),
+                fletchWeight: parseFloat(document.getElementById('fletchWeight' + suffix).value),
+                fletchLength: parseFloat(document.getElementById('fletchLength' + suffix).value),
+                fletchHeight: parseFloat(document.getElementById('fletchHeight' + suffix).value),
+                fletchDistance: parseFloat(document.getElementById('fletchDistance' + suffix).value),
+                fletchOffset: parseFloat(document.getElementById('fletchOffset' + suffix).value),
+                coefDrag: parseFloat(document.getElementById('coefDrag' + suffix).value)
+            };
+        }
+        
+        function displayResults(values, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="result-item">
+                    <div class="label">Point Weight</div>
+                    <div class="value">${values.optimalPointWeight.toFixed(0)}gr</div>
+                </div>
+                <div class="result-item">
+                    <div class="label">Total Mass</div>
+                    <div class="value">${values.totalArrowMass.toFixed(0)}gr</div>
+                </div>
+                <div class="result-item">
+                    <div class="label">FOC</div>
+                    <div class="value">${values.foc.toFixed(1)}%</div>
+                </div>
+                <div class="result-item">
+                    <div class="label">Velocity</div>
+                    <div class="value">${values.fps.toFixed(0)}fps</div>
+                </div>
+                <div class="result-item">
+                    <div class="label">KE</div>
+                    <div class="value">${values.ke.toFixed(0)}J</div>
+                </div>
+                <div class="result-item">
+                    <div class="label">Momentum</div>
+                    <div class="value">${values.momentum.toFixed(2)}</div>
+                </div>
+            `;
+        }
+        
+        function displayPlots(plots) {
+            const plotsContainer = document.getElementById('plots');
+            plotsContainer.innerHTML = '';
+            
+            const plotOrder = ['pointWeight', 'totalMass', 'foc', 'fps', 'ke', 'momentum', 'tof'];
+            plotOrder.forEach(plotName => {
+                if (plots[plotName]) {
+                    const plotDiv = document.createElement('div');
+                    plotDiv.className = 'plot-wrapper';
+                    plotDiv.id = `plot-${plotName}`;
+                    plotsContainer.appendChild(plotDiv);
+                    
+                    const plot = JSON.parse(plots[plotName]);
+                    // Make plots responsive
+                    if (plot.target_id) {
+                        plot.doc.roots.roots[0].attributes.sizing_mode = 'stretch_both';
+                    }
+                    Bokeh.embed.embed_item(plot, `plot-${plotName}`);
+                }
+            });
+            
+            // Adjust height after plots are rendered
+            setTimeout(adjustPlotHeight, 100);
+        }
+    </script>
+</body>
+</html>
